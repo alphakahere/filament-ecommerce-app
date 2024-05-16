@@ -54,8 +54,8 @@ class ProviderResource extends Resource
                     
                     TextInput::make('address')->required(),
 
-                    ]),
-                ])
+                    ])->columns(2),
+                ])->columnSpanFull()
             ]);
     }
 

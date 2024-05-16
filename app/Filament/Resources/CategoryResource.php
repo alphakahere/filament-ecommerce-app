@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use illuminate\Support\Str;
 
@@ -88,12 +89,7 @@ class CategoryResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('parent')->relationship('parent', 'name'),
-                SelectFilter::make('Visibilty')
-                    ->options([
-                        'true' => 'Visible',
-                        'false' => 'Hidden'
-                    ])
-                    ->attribute('is_visible')
+                TernaryFilter::make('is_visible')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\BrandResource\Pages;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 
 class BrandResource extends Resource
 {
@@ -87,10 +88,7 @@ class BrandResource extends Resource
                 TextColumn::make('description')->toggleable(isToggledHiddenByDefault:true),
             ])
             ->filters([
-              SelectFilter::make('Visibilty')->options([
-                'true' => 'Visible',
-                'false' => 'Hidden'
-              ])->attribute('is_visible')
+                TernaryFilter::make('is_visible')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
