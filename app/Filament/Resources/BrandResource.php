@@ -2,34 +2,35 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Models\Category;
 use Filament\Forms;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Brand;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\MarkdownEditor;
+use App\Filament\Resources\BrandResource\Pages;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
-use illuminate\Support\Str;
 
-class CategoryResource extends Resource
+class BrandResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Brand::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?int $navigationSort = 2;
+
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationGroup = 'Shop';
 
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
@@ -50,27 +51,27 @@ class CategoryResource extends Resource
   
                       TextInput::make('slug')
                           ->required()
-                          ->unique()
                           ->disabled()
                           ->dehydrated(),
-  
-                      MarkdownEditor::make('description')->columnSpan('full'),
+                        
+                          TextInput::make('url')
+                          ->url()
+                          ->nullable(),
                       
-                    ])->columns(2),
-                  ])  ,
-                  Group::make()->schema([
-                      Section::make('Status')->schema([
   
+                      MarkdownEditor::make('description'),
+                      
+                    ]),
+                ]),
+                Group::make()->schema([
+                    
+                    Section::make('Status')->schema([
                         Toggle::make('is_visible')
                         ->label('Visibility')
                         ->helperText('Enable or disable category visibility')
-                        ->default(true)->columnSpan('full'),
-  
-                        Select::make('parent_id')->relationship('parent', 'name')->nullable(),
-    
-                        
-                      ]),
+                        ->default(true),
                     ])
+                ])
             ]);
     }
 
@@ -78,22 +79,18 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable()->toggleable(isToggledHiddenByDefault:true),
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('parent.name')->label("Parent")->sortable()->searchable(),
+                TextColumn::make('id')->toggleable()->default(false),
+                TextColumn::make('name')->searchable(),
                 TextColumn::make('slug')->toggleable(isToggledHiddenByDefault:true),
                 IconColumn::make('is_visible')->boolean()->sortable(),
-                TextColumn::make('description'),
-                TextColumn::make('created_at')->date()->sortable(),
+                TextColumn::make('url'),
+                TextColumn::make('description')->toggleable(isToggledHiddenByDefault:true),
             ])
             ->filters([
-                SelectFilter::make('parent')->relationship('parent', 'name'),
-                SelectFilter::make('Visibilty')
-                    ->options([
-                        'true' => 'Visible',
-                        'false' => 'Hidden'
-                    ])
-                    ->attribute('is_visible')
+              SelectFilter::make('Visibilty')->options([
+                'true' => 'Visible',
+                'false' => 'Hidden'
+              ])->attribute('is_visible')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -116,9 +113,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListBrands::route('/'),
+            'create' => Pages\CreateBrand::route('/create'),
+            'edit' => Pages\EditBrand::route('/{record}/edit'),
         ];
     }
 }
