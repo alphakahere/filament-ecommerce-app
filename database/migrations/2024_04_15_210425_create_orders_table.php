@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('num_order');
-            $table->foreignId('user_id')
-                ->constrained('users')
+            $table->foreignId('customer_id')
+                ->constrained('customers')
                 ->cascadeOnDelete();
 
             $table->string('total')->unique();

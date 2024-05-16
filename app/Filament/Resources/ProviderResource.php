@@ -23,6 +23,10 @@ class ProviderResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?int $navigationSort = 6;
+
+    protected static ?string $navigationGroup = 'Shop';
+
 
     public static function form(Form $form): Form
     {
